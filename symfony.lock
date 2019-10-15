@@ -1,4 +1,7 @@
 {
+    "blackfire/php-sdk": {
+        "version": "v1.19.2"
+    },
     "composer/ca-bundle": {
         "version": "1.x-dev"
     },
