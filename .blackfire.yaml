@@ -1,0 +1,15 @@
+metrics:
+    markdown_custom:
+        label: Markdown
+        layer: markdown_custom
+        timeline: true
+
+    markdown_to_html:
+        label: 'Markdown to HTML'
+        layer: markdown_custom
+        timeline: true
+        matching_calls:
+            php:
+                -
+                    callee: "=App\\Utils\\Markdown::toHtml"
+                    contrib: count-only
