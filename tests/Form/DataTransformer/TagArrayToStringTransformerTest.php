@@ -14,6 +14,8 @@ namespace App\Tests\Form\DataTransformer;
 use App\Entity\Tag;
 use App\Form\DataTransformer\TagArrayToStringTransformer;
 use App\Repository\TagRepository;
+use Blackfire\Bridge\PhpUnit\TestCaseTrait as BlackfireTestTrait;
+use Blackfire\Profile;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,6 +25,8 @@ use PHPUnit\Framework\TestCase;
  */
 class TagArrayToStringTransformerTest extends TestCase
 {
+    use BlackfireTestTrait;
+
     /**
      * Ensures that tags are created correctly.
      */
@@ -80,6 +84,24 @@ class TagArrayToStringTransformerTest extends TestCase
         $this->assertCount(5, $tags);
         $this->assertSame($persistedTags[0], $tags[0]);
         $this->assertSame($persistedTags[1], $tags[1]);
+    }
+
+    public function testUsesAlreadyDefinedTagsBlackfire()
+    {
+        $tagArrayToStringTransformer = $this->getMockedTransformer([
+            $this->createTag('Hello'),
+            $this->createTag('World'),
+        ]);
+
+        $config = (new Profile\Configuration())
+            ->setMetadata('skip_timeline', 'false')
+            ->assert('main.wall_time < 50ms')
+            ->assert('main.memory < 8Mb')
+        ;
+
+        $this->assertBlackfire($config, function () use ($tagArrayToStringTransformer) {
+            $tagArrayToStringTransformer->reverseTransform('Hello, World, How, Are, You');
+        });
     }
 
     /**
