@@ -13,3 +13,30 @@ metrics:
                 -
                     callee: "=App\\Utils\\Markdown::toHtml"
                     contrib: count-only
+
+tests:
+    'All pages are fast':
+        path: '/.*'
+        assertions:
+            - 'main.wall_time < 50ms'
+            - 'main.memory < 8Mb'
+
+    'Twig displays and renders':
+        path: '/.*'
+        assertions:
+            - 'metrics.twig.display.count + metrics.twig.render.count < 5'
+
+    'Symfony events dispatched':
+        path: '/.*'
+        assertions:
+            - 'metrics.symfony.events.count < 10'
+
+    'Not too many SQL queries on the homepage':
+        path: '/(en|fr)/blog/'
+        assertions:
+            - 'metrics.sql.queries.count < 5'
+
+    'No external HTTP requests on the homepage':
+        path: '/(en|fr)/blog/'
+        assertions:
+            - 'metrics.http.requests.count == 0'
