@@ -9,6 +9,11 @@ jobs:
             # Specify the version you desire here
             - image: circleci/php:7.3-node
             - image: blackfire/blackfire
+              environment:
+                  BLACKFIRE_CLIENT_ID: $BLACKFIRE_CLIENT_ID
+                  BLACKFIRE_CLIENT_TOKEN: $BLACKFIRE_CLIENT_TOKEN
+                  BLACKFIRE_SERVER_ID: $BLACKFIRE_SERVER_ID
+                  BLACKFIRE_SERVER_TOKEN: $BLACKFIRE_SERVER_TOKEN
 
             # Specify service dependencies here if necessary
             # CircleCI maintains a library of pre-built images
@@ -30,7 +35,7 @@ jobs:
                   && mkdir -p /tmp/blackfire \
                   && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
                   && sudo mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-                  && sudo printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
+                  && echo "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" | sudo tee $PHP_INI_DIR/conf.d/blackfire.ini \
                   && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
 
             # Download and cache dependencies
