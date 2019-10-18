@@ -1,49 +1,23 @@
-# PHP CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-php/ for more details
-#
 version: 2
-
-references:
-    blackfire_params: &blackfire_params
-        BLACKFIRE_CLIENT_ID: ${BLACKFIRE_CLIENT_ID}
-        BLACKFIRE_CLIENT_TOKEN: ${BLACKFIRE_CLIENT_TOKEN}
-        BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID}
-        BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN}
 
 jobs:
     build:
         docker:
-            # Specify the version you desire here
             - image: circleci/php:7.3-node
-            - image: blackfire/blackfire
-              name: blackfire
-              environment: *blackfire_params
-
-            # Specify service dependencies here if necessary
-            # CircleCI maintains a library of pre-built images
-            # documented at https://circleci.com/docs/2.0/circleci-images/
-            # Using the RAM variation mitigates I/O contention
-            # for database intensive operations.
-            # - image: circleci/mysql:5.7-ram
-            #
-            # - image: redis:2.8.19
 
         steps:
             - checkout
 
-            - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
             - run:
-                name: Install Blackfire probe
+                name: Install Blackfire
                 command: |
-                    version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;")
-                    curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version
-                    mkdir -p /tmp/blackfire
-                    tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire
-                    sudo mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so
-                    echo "extension=blackfire.so" | sudo tee -a $PHP_INI_DIR/conf.d/blackfire.ini
-                    echo "blackfire.agent_socket=tcp://blackfire:8707" | sudo tee -a $PHP_INI_DIR/conf.d/blackfire.ini
-                    rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
+                    wget -q -O - https://packages.blackfire.io/gpg.key | sudo apt-key add -
+                    echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
+                    sudo apt update
+                    sudo apt-get install blackfire-agent blackfire-php
+                    blackfire-agent --server-id=${BLACKFIRE_SERVER_ID} --server-token=${BLACKFIRE_SERVER_TOKEN}
+                    blackfire --client-id=${BLACKFIRE_CLIENT_ID} --client-token=${BLACKFIRE_CLIENT_TOKEN}
+                    sudo /etc/init.d/blackfire-agent restart
                     php -v
 
             # Download and cache dependencies
