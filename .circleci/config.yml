@@ -10,11 +10,6 @@ jobs:
             - image: circleci/php:7.3-node
             - image: blackfire/blackfire
               name: blackfire
-              environment:
-                  BLACKFIRE_CLIENT_ID: 6933550d-7827-43b4-b260-088a52758d08
-                  BLACKFIRE_CLIENT_TOKEN: 6ae1433327e1d91a5078400a42e421dc687998fda95d314227dd289279155749
-                  BLACKFIRE_SERVER_ID: ba8bc7ac-987a-4918-b6f6-0f5a38fcc885
-                  BLACKFIRE_SERVER_TOKEN: f37fe4c36160f1148c48c3a74f66a43051618864f3c150a9c1f5f69b8beb7f3c
 
             # Specify service dependencies here if necessary
             # CircleCI maintains a library of pre-built images
