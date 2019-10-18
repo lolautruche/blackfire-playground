@@ -17,8 +17,9 @@ jobs:
                     sudo apt-get install blackfire-agent blackfire-php
                     sudo sed -i -e "s/server-id=/server-id=${BLACKFIRE_SERVER_ID}/g" /etc/blackfire/agent
                     sudo sed -i -e "s/server-token=/server-token=${BLACKFIRE_SERVER_TOKEN}/g" /etc/blackfire/agent
-                    blackfire --client-id=${BLACKFIRE_CLIENT_ID} --client-token=${BLACKFIRE_CLIENT_TOKEN}
                     sudo /etc/init.d/blackfire-agent restart
+                    sed -i -e "s/client-token=/client-id=${BLACKFIRE_CLIENT_ID}/g" ${HOME}/.blackfire.ini
+                    sed -i -e "s/client-token=/client-token=${BLACKFIRE_CLIENT_TOKEN}/g" ${HOME}/.blackfire.ini
                     php -v
 
             # Download and cache dependencies
