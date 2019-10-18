@@ -37,8 +37,8 @@ jobs:
                     mkdir -p /tmp/blackfire
                     tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire
                     sudo mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so
-                    echo "extension=blackfire.so" | sudo tee $PHP_INI_DIR/conf.d/blackfire.ini
-                    echo "blackfire.agent_socket=tcp://blackfire:8707\n" | sudo tee $PHP_INI_DIR/conf.d/blackfire.ini
+                    echo "extension=blackfire.so" | sudo tee -a $PHP_INI_DIR/conf.d/blackfire.ini
+                    echo "blackfire.agent_socket=tcp://blackfire:8707" | sudo tee -a $PHP_INI_DIR/conf.d/blackfire.ini
                     rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
                     php -v
 
