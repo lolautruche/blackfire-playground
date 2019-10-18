@@ -52,10 +52,6 @@ jobs:
 
             - run: composer install -n --prefer-dist
 
-            - save_cache:
-                  key: v1-dependencies-{{ checksum "composer.lock" }}
-                  paths:
-                      - ./vendor
             - restore_cache:
                   keys:
                       - node-v1-{{ checksum "package.json" }}
@@ -71,3 +67,9 @@ jobs:
                 environment:
                     APP_DEBUG: 0
                 command: php bin/phpunit --group=blackfire
+
+            - save_cache:
+                  key: v1-dependencies-{{ checksum "composer.lock" }}
+                  paths:
+                      - ./vendor
+                      - ./bin/.phpunit
