@@ -70,4 +70,4 @@ jobs:
                 name: Blackfire tests
                 environment:
                     APP_DEBUG: 0
-                command: php bin/php phpunit --group=blackfire
+                command: php bin/phpunit --group=blackfire
