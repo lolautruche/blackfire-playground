@@ -86,6 +86,10 @@ class TagArrayToStringTransformerTest extends TestCase
         $this->assertSame($persistedTags[1], $tags[1]);
     }
 
+    /**
+     * @group blackfire
+     * @requires extension blackfire
+     */
     public function testUsesAlreadyDefinedTagsBlackfire()
     {
         $tagArrayToStringTransformer = $this->getMockedTransformer([

@@ -65,3 +65,9 @@ jobs:
                   key: node-v1-{{ checksum "package.json" }}
                   paths:
                       - node_modules
+
+            - run:
+                name: Blackfire tests
+                environment:
+                    APP_DEBUG=0
+                command: php bin/php phpunit --group=blackfire
