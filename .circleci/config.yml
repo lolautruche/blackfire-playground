@@ -15,7 +15,7 @@ jobs:
                     echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
                     sudo apt update
                     sudo apt-get install blackfire-agent blackfire-php
-                    blackfire-agent --server-id=${BLACKFIRE_SERVER_ID} --server-token=${BLACKFIRE_SERVER_TOKEN}
+                    sudo blackfire-agent --server-id=${BLACKFIRE_SERVER_ID} --server-token=${BLACKFIRE_SERVER_TOKEN}
                     blackfire --client-id=${BLACKFIRE_CLIENT_ID} --client-token=${BLACKFIRE_CLIENT_TOKEN}
                     sudo /etc/init.d/blackfire-agent restart
                     php -v
