@@ -9,6 +9,7 @@ jobs:
             # Specify the version you desire here
             - image: circleci/php:7.3-node
             - image: blackfire/blackfire
+              name: blackfire
               environment:
                   BLACKFIRE_CLIENT_ID: 6933550d-7827-43b4-b260-088a52758d08
                   BLACKFIRE_CLIENT_TOKEN: 6ae1433327e1d91a5078400a42e421dc687998fda95d314227dd289279155749
@@ -28,7 +29,6 @@ jobs:
             - checkout
 
             - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
-            - run: sudo docker-php-ext-install zip
             - run:
                 name: Install Blackfire probe
                 command: |
