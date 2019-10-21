@@ -1,4 +1,38 @@
-version: 2
+version: 2.1
+description: Foo
+
+orbs:
+    blackfire-php:
+        commands:
+            install-debian:
+                parameters:
+                    server_id:
+                        type: string
+                        default: BLACKFIRE_SERVER_ID
+                    server_token:
+                        type: string
+                        default: BLACKFIRE_SERVER_TOKEN
+                    client_id:
+                        type: string
+                        default: BLACKFIRE_CLIENT_ID
+                    client_token:
+                        type: string
+                        default: BLACKFIRE_CLIENT_TOKEN
+                steps:
+                    - run:
+                          name: Install Blackfire
+                          command: |
+                              wget -q -O - https://packages.blackfire.io/gpg.key | sudo apt-key add -
+                              echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
+                              sudo apt update
+                              sudo apt-get install blackfire-agent blackfire-php
+                              sudo sed -i -e "s/server-id=/server-id=<< parameters.server_id >>/g" /etc/blackfire/agent
+                              sudo sed -i -e "s/server-token=/server-token=<< parameters.server_token >>/g" /etc/blackfire/agent
+                              sudo /etc/init.d/blackfire-agent restart
+                              blackfire config --dump > ${HOME}/.blackfire.ini.tmp && mv ${HOME}/.blackfire.ini.tmp ${HOME}/.blackfire.ini
+                              sed -i -e "s/client-token=/client-id=<< parameters.client_id >>/g" ${HOME}/.blackfire.ini
+                              sed -i -e "s/client-token=/client-token=<< parameters.client_token >>/g" ${HOME}/.blackfire.ini
+                              php -v
 
 jobs:
     build:
@@ -8,20 +42,7 @@ jobs:
         steps:
             - checkout
 
-            - run:
-                name: Install Blackfire
-                command: |
-                    wget -q -O - https://packages.blackfire.io/gpg.key | sudo apt-key add -
-                    echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
-                    sudo apt update
-                    sudo apt-get install blackfire-agent blackfire-php
-                    sudo sed -i -e "s/server-id=/server-id=${BLACKFIRE_SERVER_ID}/g" /etc/blackfire/agent
-                    sudo sed -i -e "s/server-token=/server-token=${BLACKFIRE_SERVER_TOKEN}/g" /etc/blackfire/agent
-                    sudo /etc/init.d/blackfire-agent restart
-                    blackfire config --dump > ${HOME}/.blackfire.ini.tmp && mv ${HOME}/.blackfire.ini.tmp ${HOME}/.blackfire.ini
-                    sed -i -e "s/client-token=/client-id=${BLACKFIRE_CLIENT_ID}/g" ${HOME}/.blackfire.ini
-                    sed -i -e "s/client-token=/client-token=${BLACKFIRE_CLIENT_TOKEN}/g" ${HOME}/.blackfire.ini
-                    php -v
+            - blackfire-php/install-debian
 
             # Download and cache dependencies
             - restore_cache:
