@@ -7,16 +7,16 @@ orbs:
             install-debian:
                 parameters:
                     server_id:
-                        type: string
+                        type: env_var_name
                         default: BLACKFIRE_SERVER_ID
                     server_token:
-                        type: string
+                        type: env_var_name
                         default: BLACKFIRE_SERVER_TOKEN
                     client_id:
-                        type: string
+                        type: env_var_name
                         default: BLACKFIRE_CLIENT_ID
                     client_token:
-                        type: string
+                        type: env_var_name
                         default: BLACKFIRE_CLIENT_TOKEN
                 steps:
                     - run:
