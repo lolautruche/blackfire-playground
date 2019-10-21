@@ -42,7 +42,11 @@ jobs:
         steps:
             - checkout
 
-            - blackfire-php/install-debian
+            - blackfire-php/install-debian:
+                  server_id: BLACKFIRE_SERVER_ID
+                  server_token: BLACKFIRE_SERVER_TOKEN
+                  client_id: BLACKFIRE_CLIENT_ID
+                  client_token: BLACKFIRE_CLIENT_TOKEN
 
             # Download and cache dependencies
             - restore_cache:
