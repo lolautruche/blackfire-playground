@@ -32,6 +32,11 @@ orbs:
                               blackfire config --dump > ${HOME}/.blackfire.ini.tmp && mv ${HOME}/.blackfire.ini.tmp ${HOME}/.blackfire.ini
                               sed -i -e "s/client-token=/client-id=${<< parameters.client_id >>}/g" ${HOME}/.blackfire.ini
                               sed -i -e "s/client-token=/client-token=${<< parameters.client_token >>}/g" ${HOME}/.blackfire.ini
+
+                    - run:
+                          name: Deactivate Xdebug
+                          command: |
+                              sudo sed -i -e "s/zend_extension=/;zend_extension=/g" /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
                               php -v
 
 jobs:
