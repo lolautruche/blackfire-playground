@@ -26,13 +26,9 @@ orbs:
                               echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
                               sudo apt update
                               sudo apt-get install blackfire-agent blackfire-php
-                              sudo sed -i -e "s/server-id=/server-id=${<< parameters.server_id >>}/g" /etc/blackfire/agent
-                              sudo sed -i -e "s/server-token=/server-token=${<< parameters.server_token >>}/g" /etc/blackfire/agent
+                              blackfire-agent -register --server-id=${<< parameters.server_id >>} --server-token=${<< parameters.server_token >>}
                               sudo /etc/init.d/blackfire-agent restart
-                              blackfire config --dump > ${HOME}/.blackfire.ini.tmp && mv ${HOME}/.blackfire.ini.tmp ${HOME}/.blackfire.ini
-                              sed -i -e "s/client-token=/client-id=${<< parameters.client_id >>}/g" ${HOME}/.blackfire.ini
-                              sed -i -e "s/client-token=/client-token=${<< parameters.client_token >>}/g" ${HOME}/.blackfire.ini
-
+                              blackfire config --client-id=${<< parameters.client_id >>} --client-token=${<< parameters.client_token >>}
 jobs:
     build:
         docker:
