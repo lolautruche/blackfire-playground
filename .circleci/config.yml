@@ -26,7 +26,7 @@ orbs:
                               echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
                               sudo apt update
                               sudo apt-get install blackfire-agent blackfire-php
-                              blackfire-agent -register --server-id=${<< parameters.server_id >>} --server-token=${<< parameters.server_token >>}
+                              sudo blackfire-agent -register --server-id=${<< parameters.server_id >>} --server-token=${<< parameters.server_token >>}
                               sudo /etc/init.d/blackfire-agent restart
                               blackfire config --client-id=${<< parameters.client_id >>} --client-token=${<< parameters.client_token >>}
 jobs:
