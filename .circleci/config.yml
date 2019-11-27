@@ -12,11 +12,7 @@ jobs:
         steps:
             - checkout
 
-            - blackfire/setup:
-                  server_id: BLACKFIRE_SERVER_ID
-                  server_token: BLACKFIRE_SERVER_TOKEN
-                  client_id: BLACKFIRE_CLIENT_ID
-                  client_token: BLACKFIRE_CLIENT_TOKEN
+            - blackfire/setup
 
             # Download and cache dependencies
             - restore_cache:
