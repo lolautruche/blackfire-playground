@@ -1,5 +1,5 @@
 version: 2.1
-description: Foo bar
+description: Foo
 
 orbs:
     blackfire: blackfireio/php@dev:0.1
