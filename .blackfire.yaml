@@ -1,7 +1,7 @@
 metrics:
     markdown_custom:
         label: Markdown
-        layer: markdown_custom
+        layer: ~
         timeline: true
 
     markdown_to_html:
@@ -14,12 +14,23 @@ metrics:
                     callee: "=App\\Utils\\Markdown::toHtml"
                     contrib: count-only
 
+    greetings:
+        label: Greetings phrases
+        matching_calls:
+            php:
+                -
+                    callee:
+                        selector: "=App\\Utils\\Greetings::phrase"
+                        argument:
+                            1: "/^(Hello|Hi)/"
+                            2: "*"
+
 tests:
     'All pages are fast':
         path: '/.*'
         assertions:
             - 'main.wall_time < 50ms'
-            - 'main.memory < 8Mb'
+            - 'main.memory < 10Mb'
 
     'Twig displays and renders':
         path: '/.*'
@@ -40,3 +51,9 @@ tests:
         path: '/(en|fr)/blog/'
         assertions:
             - 'metrics.http.requests.count == 0'
+
+    'Test':
+        path: '/.*'
+        assertions:
+            - "percent(main.wall_time) < 10%"
+
