@@ -12,7 +12,11 @@ jobs:
         steps:
             - checkout
 
-            - run: sudo docker-php-ext-install soap
+            - run:
+                  name: Install SOAP
+                  command: |
+                      sudo docker-php-ext-configure soap
+                      sudo docker-php-ext-install soap
 
             - blackfire/setup
 
