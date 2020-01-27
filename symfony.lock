@@ -105,8 +105,24 @@
     "league/uri-parser": {
         "version": "1.4.1"
     },
+    "lolautruche/payline-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "785",
+            "version": "2.0",
+            "ref": ""
+        },
+        "files": [
+            "config/packages/payline.yaml",
+            "config/routes/payline.yaml"
+        ]
+    },
     "masterminds/html5": {
         "version": "2.5.0"
+    },
+    "monext/payline-sdk": {
+        "version": "4.59.4"
     },
     "monolog/monolog": {
         "version": "1.x-dev"
