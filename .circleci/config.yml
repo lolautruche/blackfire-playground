@@ -12,6 +12,8 @@ jobs:
         steps:
             - checkout
 
+            - run: sudo docker-php-ext-install soap
+
             - blackfire/setup
 
             # Download and cache dependencies
