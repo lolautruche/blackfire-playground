@@ -1,0 +1,6 @@
+scenario
+    name 'The homepage should answer with a 200 status code'
+
+    visit url('/')
+        expect status_code() == 200
+
