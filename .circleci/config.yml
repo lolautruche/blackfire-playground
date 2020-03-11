@@ -2,7 +2,8 @@ version: 2.1
 description: Foo
 
 orbs:
-    blackfire: blackfireio/php@dev:0.1
+    blackfire: blackfireio/php@1.0
+    blackfire-agent: blackfireio/agent@dev:1.1
 
 jobs:
     build:
@@ -46,6 +47,9 @@ jobs:
                 environment:
                     APP_DEBUG: 0
                 command: php bin/phpunit --group=blackfire
+
+            - blackfire-agent/build-trigger:
+                  endpoint: "https://gitlist.demo.blackfire.io/Twig/"
 
             - save_cache:
                   key: v1-dependencies-{{ checksum "composer.lock" }}
