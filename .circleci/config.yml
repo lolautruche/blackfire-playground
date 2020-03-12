@@ -50,6 +50,7 @@ jobs:
 
             - blackfire-agent/build-trigger:
                   endpoint: "https://gitlist.demo.blackfire.io/Twig/"
+                  environment: Playground
 
             - save_cache:
                   key: v1-dependencies-{{ checksum "composer.lock" }}
