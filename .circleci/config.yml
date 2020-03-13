@@ -2,13 +2,13 @@ version: 2.1
 description: Foo
 
 orbs:
-    blackfire: blackfireio/php@1.0
+    blackfire: blackfireio/php@dev:1.1
     blackfire-agent: blackfireio/agent@dev:1.1
 
 jobs:
     build:
         docker:
-            - image: circleci/php:apache-node
+            - image: circleci/php:7.3-node
 
         steps:
             - checkout
