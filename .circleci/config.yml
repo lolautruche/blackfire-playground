@@ -3,7 +3,7 @@ description: Foo
 
 orbs:
     blackfire: blackfireio/php@dev:1.1
-    blackfire-agent: blackfireio/agent@dev:1.1
+    blackfire-agent: blackfireio/agent@dev:1.2
 
 jobs:
     build:
@@ -57,3 +57,11 @@ jobs:
                   paths:
                       - ./vendor
                       - ./bin/.phpunit
+
+workflows:
+    version: 2
+    build_and_player:
+        jobs:
+            - build
+            - blackfire-agent/player-run:
+                  scenario: hello_world.bkf
