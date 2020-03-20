@@ -57,27 +57,45 @@ jobs:
 
             - *symfony_server_start
 
-            - run:
-                name: Blackfire tests
-                environment:
-                    APP_DEBUG: 0
-                command: php bin/phpunit --group=blackfire
-
-            - blackfire-agent/build-trigger:
-                  endpoint: "https://gitlist.demo.blackfire.io/Twig/"
-                  environment: Playground
-
             - save_cache:
                   key: v1-dependencies-{{ checksum "composer.lock" }}
                   paths:
                       - ./vendor
                       - ./bin/.phpunit
 
+    unit_tests:
+        <<: *default_executor
+        steps:
+            - run:
+                name: Blackfire tests
+                environment:
+                    APP_DEBUG: 0
+                command: php bin/phpunit --group=blackfire
+
+            - save_cache:
+                key: v1-dependencies-{{ checksum "composer.lock" }}
+                paths:
+                    - ./vendor
+                    - ./bin/.phpunit
+
+    blackfire_build:
+        <<: *default_executor
+        steps:
+            - blackfire-agent/build-trigger:
+                endpoint: "https://gitlist.demo.blackfire.io/Twig/"
+                environment: Playground
+
 workflows:
     version: 2
-    build_and_player:
+    build-and-tests:
         jobs:
             - build
+            - unit_tests:
+                requires:
+                    - build
+            - blackfire_build:
+                requires:
+                    - build
             - blackfire-player/player-run:
                   requires:
                       - build
