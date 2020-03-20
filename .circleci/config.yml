@@ -60,11 +60,12 @@ jobs:
                       - ./bin/.phpunit
 
 before_player: &before_player
-    - run:
-        name: Install & run Symfony server
-        command: |
-            wget https://get.symfony.com/cli/installer -O - | bash
-            ~/.symfony/bin/symfony local:server:start -d
+    before-run:
+        - run:
+            name: "Install & run Symfony server"
+            command: |
+                wget https://get.symfony.com/cli/installer -O - | bash
+                ~/.symfony/bin/symfony local:server:start -d
 
 workflows:
     version: 2
@@ -76,7 +77,6 @@ workflows:
                   environment-name: Playground
                   endpoint: "http://localhost:8000"
                   variables: "variable_name1=value1,variable_name2=value2,foo=bar"
-                  before-run:
-                      <<: *before_player
+                  <<: *before_player
                   after-run:
                       - run: ~/.symfony/bin/symfony local:server:stop
