@@ -6,6 +6,10 @@ orbs:
     blackfire-agent: blackfireio/agent@dev:1.2
     blackfire-player: blackfireio/player@dev:1.0
 
+default_executor: &default_executor
+    docker:
+        - image: circleci/php:7.4-node
+
 symfony_server_start: &symfony_server_start
     run:
         name: "Install & run Symfony server"
@@ -15,8 +19,7 @@ symfony_server_start: &symfony_server_start
 
 jobs:
     build:
-        docker:
-            - image: circleci/php:7.3-node
+        <<: *default_executor
 
         steps:
             - checkout
