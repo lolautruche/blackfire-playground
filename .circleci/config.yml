@@ -76,5 +76,7 @@ workflows:
                   environment-name: Playground
                   endpoint: "http://localhost:8000"
                   variables: "variable_name1=value1,variable_name2=value2,foo=bar"
-                  before_run:
+                  before-run:
                       <<: *before_player
+                  after-run:
+                      - run: ~/.symfony/bin/symfony local:server:stop
