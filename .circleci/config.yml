@@ -13,6 +13,8 @@ default_executor: &default_executor
 symfony_server_start: &symfony_server_start
     run:
         name: "Install & run Symfony server"
+        environment:
+            APP_DEBUG: 0
         command: |
             wget https://get.symfony.com/cli/installer -O - | bash
             ~/.symfony/bin/symfony local:server:start -d
