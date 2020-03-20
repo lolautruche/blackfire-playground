@@ -18,6 +18,11 @@ jobs:
         docker:
             - image: circleci/php:7.3-node
             - image: blackfire/blackfire
+              environment:
+                  BLACKFIRE_SERVER_ID: $BLACKFIRE_SERVER_ID
+                  BLACKFIRE_SERVER_TOKEN: $BLACKFIRE_SERVER_TOKEN
+                  BLACKFIRE_CLIENT_ID: $BLACKFIRE_CLIENT_ID
+                  BLACKFIRE_CLIENT_TOKEN: $BLACKFIRE_CLIENT_TOKEN
 
         steps:
             - checkout
