@@ -6,18 +6,19 @@ orbs:
     blackfire-agent: blackfireio/agent@dev:1.2
     blackfire-player: blackfireio/player@dev:1.0
 
-default_executor: &default_executor
-    docker:
-        - image: circleci/php:7.4-node
+references:
+    default_executor: &default_executor
+        docker:
+            - image: circleci/php:7.4-node
 
-symfony_server_start: &symfony_server_start
-    run:
-        name: "Install & run Symfony server"
-        environment:
-            APP_DEBUG: 0
-        command: |
-            wget https://get.symfony.com/cli/installer -O - | bash
-            ~/.symfony/bin/symfony local:server:start -d
+    symfony_server_start: &symfony_server_start
+        run:
+            name: "Install & run Symfony server"
+            environment:
+                APP_DEBUG: 0
+            command: |
+                wget https://get.symfony.com/cli/installer -O - | bash
+                ~/.symfony/bin/symfony local:server:start -d
 
 jobs:
     build:
