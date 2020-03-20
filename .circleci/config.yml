@@ -6,10 +6,18 @@ orbs:
     blackfire-agent: blackfireio/agent@dev:1.2
     blackfire-player: blackfireio/player@dev:1.0
 
+symfony_server_start: &symfony_server_start
+    run:
+        name: "Install & run Symfony server"
+        command: |
+            wget https://get.symfony.com/cli/installer -O - | bash
+            ~/.symfony/bin/symfony local:server:start -d
+
 jobs:
     build:
         docker:
             - image: circleci/php:7.3-node
+            - image: blackfire/blackfire
 
         steps:
             - checkout
@@ -43,6 +51,8 @@ jobs:
                   paths:
                       - node_modules
 
+            - *symfony_server_start
+
             - run:
                 name: Blackfire tests
                 environment:
@@ -59,14 +69,6 @@ jobs:
                       - ./vendor
                       - ./bin/.phpunit
 
-before_player: &before_player
-    before-run:
-        - run:
-            name: "Install & run Symfony server"
-            command: |
-                wget https://get.symfony.com/cli/installer -O - | bash
-                ~/.symfony/bin/symfony local:server:start -d
-
 workflows:
     version: 2
     build_and_player:
@@ -77,6 +79,3 @@ workflows:
                   environment-name: Playground
                   endpoint: "http://localhost:8000"
                   variables: "variable_name1=value1,variable_name2=value2,foo=bar"
-                  <<: *before_player
-                  after-run:
-                      - run: ~/.symfony/bin/symfony local:server:stop
