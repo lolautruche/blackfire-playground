@@ -64,6 +64,10 @@ jobs:
                       - ./vendor
                       - ./bin/.phpunit
 
+            - persist_to_workspace:
+                root: .
+                paths: ./*
+
     unit_tests:
         <<: *default_executor
         steps:
