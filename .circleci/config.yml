@@ -59,13 +59,22 @@ jobs:
                       - ./vendor
                       - ./bin/.phpunit
 
+before_player: &before_player
+    - run:
+        name: Install & run Symfony server
+        command: |
+            wget https://get.symfony.com/cli/installer -O - | bash
+            ~/.symfony/bin/symfony local:server:start -d
+
 workflows:
     version: 2
     build_and_player:
         jobs:
             - build
             - blackfire-player/player-run:
-                  scenario: hello_world.bkf
+                  scenario: scenario.bkf
                   environment-name: Playground
                   endpoint: "http://localhost:8000"
                   variables: "variable_name1=value1,variable_name2=value2,foo=bar"
+                  before_run:
+                      <<: *before_player

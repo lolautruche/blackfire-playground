@@ -3,4 +3,5 @@ scenario
 
     visit url('/')
         expect status_code() == 200
+        assert main.peak_memory < 10mb
 
