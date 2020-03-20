@@ -71,6 +71,8 @@ jobs:
     unit_tests:
         <<: *default_executor
         steps:
+            - attach_workspace:
+                at: .
             - run:
                 name: Blackfire tests
                 environment:
