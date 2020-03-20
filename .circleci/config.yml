@@ -65,3 +65,6 @@ workflows:
             - build
             - blackfire-agent/player-run:
                   scenario: hello_world.bkf
+                  environment-name: Playground
+                  endpoint: "http://localhost:8000"
+                  variables: "variable_name1=value1,variable_name2=value2,foo=bar"
