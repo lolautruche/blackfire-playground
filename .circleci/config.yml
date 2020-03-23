@@ -34,8 +34,6 @@ jobs:
                       sudo docker-php-ext-configure soap
                       sudo docker-php-ext-install soap
 
-            - blackfire/setup
-
             # Download and cache dependencies
             - restore_cache:
                   keys:
