@@ -15,7 +15,7 @@ references:
         run:
             name: "Install & run Symfony server"
             environment:
-                APP_DEBUG: 0
+                APP_ENV: prod
             command: |
                 wget https://get.symfony.com/cli/installer -O - | bash
                 ~/.symfony/bin/symfony local:server:start -d
