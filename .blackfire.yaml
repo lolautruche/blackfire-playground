@@ -29,7 +29,7 @@ tests:
     'All pages are fast':
         path: '/.*'
         assertions:
-            - 'main.wall_time < 50ms'
+            - 'main.wall_time < 200ms'
             - 'main.memory < 10Mb'
 
     'Twig displays and renders':

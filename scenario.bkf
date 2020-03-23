@@ -1,7 +1,8 @@
 scenario
-    name 'The homepage should answer with a 200 status code'
+    name 'The main homepage and blog homepage should answer with a 200 status code'
 
     visit url('/')
         expect status_code() == 200
-        assert main.peak_memory < 10mb
 
+    visit url('/blog')
+        expect status_code() == 200
