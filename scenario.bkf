@@ -2,7 +2,11 @@ scenario
     name 'The main homepage and blog homepage should answer with a 200 status code'
 
     visit url('/')
+        name "Homepage"
         expect status_code() == 200
+        warmup true
 
-    visit url('/blog')
+    visit url('/en/blog')
+        name "Blog homepage"
         expect status_code() == 200
+        warmup true
