@@ -19,6 +19,7 @@ references:
             command: |
                 wget https://get.symfony.com/cli/installer -O - | bash
                 ~/.symfony/bin/symfony local:server:start -d
+                php bin/console cache:warmup -e prod
 
 jobs:
     build:
