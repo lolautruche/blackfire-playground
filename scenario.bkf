@@ -6,7 +6,7 @@ scenario
         expect status_code() == 200
         warmup true
 
-    visit url('/en/blog')
+    visit url('/en/blog/')
         name "Blog homepage"
         expect status_code() == 200
         warmup true
