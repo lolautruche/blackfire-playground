@@ -56,8 +56,6 @@ jobs:
                   paths:
                       - node_modules
 
-            - *symfony_server_start
-
             - save_cache:
                   key: v1-dependencies-{{ checksum "composer.lock" }}
                   paths:
@@ -73,6 +71,7 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
+            - blackfire/setup
             - run:
                 name: Blackfire tests
                 environment:
@@ -106,6 +105,11 @@ workflows:
             - blackfire-player/player-run:
                   requires:
                       - build
+                  pre-steps:
+                      - attach_workspace:
+                          at: .
+                      - blackfire/setup
+                      - *symfony_server_start
                   scenario: scenario.bkf
                   environment-name: Playground
                   endpoint: "http://localhost:8000"
