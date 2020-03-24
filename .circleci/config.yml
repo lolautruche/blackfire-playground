@@ -89,7 +89,7 @@ jobs:
             - blackfire/setup
             - blackfire-agent/build-trigger:
                 endpoint: "https://blackfire.io"
-                environment: Blackfire.io
+                environment: a38f69ca-3b56-4ea6-beac-272b2568164a
 
     blackfire_player:
         <<: *default_executor
