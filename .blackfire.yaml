@@ -40,7 +40,7 @@ tests:
     'Symfony events dispatched':
         path: '/.*'
         assertions:
-            - 'metrics.symfony.events.count < 10'
+            - 'metrics.symfony.events.count < 25'
 
     'Not too many SQL queries on the homepage':
         path: '/(en|fr)/blog/'
