@@ -89,7 +89,7 @@ jobs:
             - blackfire/setup
             - blackfire-agent/build-trigger:
                 endpoint: "https://blackfire.io"
-                environment: Playground
+                environment: Blackfire.io
 
     blackfire_player:
         <<: *default_executor
