@@ -86,6 +86,7 @@ jobs:
     blackfire_build:
         <<: *default_executor
         steps:
+            - blackfire/setup
             - blackfire-agent/build-trigger:
                 endpoint: "https://symfony.com/blog/symfony-5-0-0-released"
                 environment: Playground
