@@ -35,7 +35,7 @@ tests:
     'Twig displays and renders':
         path: '/.*'
         assertions:
-            - 'metrics.twig.display.count + metrics.twig.render.count < 20'
+            - 'metrics.twig.display.count + metrics.twig.render.count < 40'
 
     'Symfony events dispatched':
         path: '/.*'
