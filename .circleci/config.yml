@@ -87,7 +87,7 @@ jobs:
         <<: *default_executor
         steps:
             - blackfire-agent/build-trigger:
-                endpoint: "https://gitlist.demo.blackfire.io/Twig/"
+                endpoint: "https://symfony.com/blog/symfony-5-0-0-released"
                 environment: Playground
 
     blackfire_player:
