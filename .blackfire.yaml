@@ -71,4 +71,4 @@ scenarios: |
         visit url('/en/blog/')
             name "Blog homepage"
             expect status_code() == 200
-            warmup true
+            warmup 2
