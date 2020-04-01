@@ -99,6 +99,9 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
+            -   run:
+                    name: Install APCu
+                    command: sudo pecl install apcu && sudo docker-php-ext-enable apcu
             - blackfire/setup
             - *symfony_server_start
             - blackfire-player/run-scenario:
