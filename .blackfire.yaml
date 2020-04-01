@@ -57,3 +57,16 @@ tests:
         assertions:
             - "percent(main.wall_time) < 10%"
 
+scenarios: |
+    #!blackfire-player
+
+    scenario
+        name 'The main homepage and blog homepage should answer with a 200 status code'
+
+        visit url('/')
+            name "Homepage"
+            expect status_code() == 200
+
+        visit url('/en/blog/')
+            name "Blog homepage"
+            expect status_code() == 200
