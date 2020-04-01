@@ -88,7 +88,7 @@ jobs:
         steps:
             - blackfire/setup
             - blackfire-agent/build-trigger:
-                endpoint: "https://blackfire.io"
+                endpoint: "https://jszflcqa5e-a5i4gffd76b7w.eu.s5y.io/"
                 environment: e97cbe91-24b0-40ed-8cb6-f3c9886bccc7
 
     blackfire_player:
