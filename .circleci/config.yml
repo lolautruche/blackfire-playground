@@ -29,8 +29,11 @@ jobs:
             - checkout
 
             - run:
-                  name: Install APCU
+                  name: Install SOAP & APCU
                   command: |
+                      sudo apt update && sudo apt install -y libxml2-dev
+                      sudo docker-php-ext-configure soap
+                      sudo docker-php-ext-install soap
                       sudo pecl install apcu
 
             # Download and cache dependencies
