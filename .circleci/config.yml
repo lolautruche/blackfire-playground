@@ -2,9 +2,9 @@ version: 2.1
 description: Foo1
 
 orbs:
-    blackfire: blackfireio/php@dev:1.1
-    blackfire-agent: blackfireio/agent@dev:1.2
-    blackfire-player: blackfireio/player@dev:1.0
+    blackfire: blackfireio/php@1.1
+    blackfire-agent: blackfireio/agent@1.1
+    blackfire-player: blackfireio/player@1.0
 
 references:
     default_executor: &default_executor
@@ -31,10 +31,12 @@ jobs:
             - run:
                   name: Install SOAP & APCU
                   command: |
+                      sudo pecl install apcu
                       sudo apt update && sudo apt install -y libxml2-dev
                       sudo docker-php-ext-configure soap
                       sudo docker-php-ext-install soap
-                      sudo pecl install apcu
+
+                      php -v
 
             # Download and cache dependencies
             - restore_cache:
