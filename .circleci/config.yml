@@ -29,12 +29,14 @@ jobs:
             - checkout
 
             - run:
-                  name: Install SOAP & APCU
+                  name: Install SOAP & APCu
                   command: |
-                      sudo pecl install apcu
+                      # APCu
+                      sudo pecl install apcu && sudo docker-php-ext-enable apcu
+
+                      # SOAP (for PaylineBundle)
                       sudo apt update && sudo apt install -y libxml2-dev
-                      sudo docker-php-ext-configure soap
-                      sudo docker-php-ext-install soap
+                      sudo docker-php-ext-configure soap && sudo docker-php-ext-install soap
 
                       php -v
 
