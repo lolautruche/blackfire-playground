@@ -30,6 +30,14 @@ orbs:
                               symfony link <<parameters.project-id>>
                               symfony deploy
 
+            local_server_run:
+                steps:
+                    - run:
+                          name: Run Symfony server
+                          environment:
+                              APP_DEBUG: 0
+                          command: symfony local:server:start -d
+
 references:
     default_executor: &default_executor
         docker:
@@ -124,7 +132,8 @@ jobs:
             - attach_workspace:
                 at: .
             - blackfire/setup
-            - *symfony_server_start
+            - symfony/install
+            - symfony/local_server_run
             - blackfire-player/run-scenario:
                 scenario: scenario.bkf
                 environment-name: Playground
