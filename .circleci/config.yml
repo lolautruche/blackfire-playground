@@ -148,9 +148,6 @@ workflows:
             - unit_tests:
                 requires:
                     - build
-            - blackfire_build:
-                requires:
-                    - build
             - blackfire_player:
                 requires:
                     - build
@@ -158,3 +155,6 @@ workflows:
                   requires:
                       - unit_tests
                       - blackfire_player
+            - blackfire_build:
+                  requires:
+                      - symfony_deploy
