@@ -43,6 +43,11 @@ references:
         docker:
             - image: circleci/php:7.4-fpm-node
 
+    apcu_install: &apcu_install
+        run:
+            name: Install APCu
+            command: sudo pecl install apcu && sudo docker-php-ext-enable apcu
+
     symfony_server_start: &symfony_server_start
         run:
             name: "Install & run Symfony server"
@@ -60,12 +65,10 @@ jobs:
         steps:
             - checkout
 
+            - *apcu_install
             - run:
-                  name: Install SOAP & APCu
+                  name: Install SOAP
                   command: |
-                      # APCu
-                      sudo pecl install apcu && sudo docker-php-ext-enable apcu
-
                       # SOAP (for PaylineBundle)
                       sudo apt update && sudo apt install -y libxml2-dev
                       sudo docker-php-ext-configure soap && sudo docker-php-ext-install soap
@@ -131,6 +134,7 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
+            - *apcu_install
             - blackfire/setup
             - symfony/install
             - symfony/local_server_run
