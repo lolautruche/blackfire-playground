@@ -89,10 +89,11 @@ jobs:
     blackfire_build:
         <<: *default_executor
         steps:
-            - blackfire/setup
+            - blackfire-agent/setup
             - blackfire-agent/build-trigger:
                 endpoint: "https://jszflcqa5e-a5i4gffd76b7w.eu.s5y.io/"
                 environment: e97cbe91-24b0-40ed-8cb6-f3c9886bccc7
+                token: ${BLACKFIRE_BUILD_TOKEN}
 
     blackfire_player:
         <<: *default_executor
