@@ -3,7 +3,7 @@ description: Foo1
 
 orbs:
     blackfire: blackfireio/php@1.1
-    blackfire-agent: blackfireio/agent@1.1
+    blackfire-agent: blackfireio/agent@dev:1.2.0
     blackfire-player: blackfireio/player@1.0
 
 references:
