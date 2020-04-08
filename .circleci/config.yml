@@ -6,6 +6,30 @@ orbs:
     blackfire-agent: blackfireio/agent@1.1
     blackfire-player: blackfireio/player@1.0
 
+    symfony:
+        commands:
+            install:
+                steps:
+                    - run:
+                          name: Install Symfony CLI
+                          command: |
+                              wget https://get.symfony.com/cli/installer -O - | bash
+                              sudo ln -s ~/.symfony/bin/symfony /usr/local/bin/symfony
+
+                              symfony version
+
+            deploy:
+                parameters:
+                    project-id:
+                        type: string
+
+                steps:
+                    - run:
+                          name: Symfony deploy
+                          command: |
+                              symfony link <<parameters.project-id>>
+                              symfony deploy
+
 references:
     default_executor: &default_executor
         docker:
@@ -107,6 +131,15 @@ jobs:
                 endpoint: "http://localhost:8000"
                 variables: "variable_name1=value1,variable_name2=value2,foo=bar"
 
+    symfony_deploy:
+        <<: *default_executor
+        steps:
+            - attach_workspace:
+                at: .
+            - symfony/install
+            - symfony/deploy:
+                  project-id: a5i4gffd76b7w
+
 workflows:
     version: 2
     build-and-tests:
@@ -121,3 +154,7 @@ workflows:
             - blackfire_player:
                 requires:
                     - build
+            - symfony_deploy:
+                  requires:
+                      - unit_tests
+                      - blackfire_player
