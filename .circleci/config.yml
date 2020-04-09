@@ -15,6 +15,7 @@ orbs:
                           command: |
                               wget https://get.symfony.com/cli/installer -O - | bash
                               sudo ln -s ~/.symfony/bin/symfony /usr/local/bin/symfony
+                              mkdir ~/.ssh && ssh-keyscan -H git.eu.s5y.io >> ~/.ssh/known_hosts
 
                               symfony version
 
