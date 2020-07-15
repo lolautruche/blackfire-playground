@@ -60,5 +60,5 @@ jobs:
 
     - name: Blackfire config dump
       run: |
-        blackfire config --dump
+        sudo blackfire config --dump
         blackfire-agent -d
