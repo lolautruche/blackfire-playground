@@ -47,8 +47,13 @@ jobs:
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+    - name: Blackfire versions
+      run: |
+        php -v
+        blackfire version
+        blackfire-agent -v
 
-    # - name: Run test suite
-    #   run: composer run-script test
+    - name: Blackfire config dump
+      run: |
+        blackfire config --dump
+        blackfire-agent -d
