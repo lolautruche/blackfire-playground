@@ -1,4 +1,6 @@
 {
+    "name": "lolautruche's Blackfire Playground",
+    "description": "Blackfire Playground to test various integrations.",
     "license": "proprietary",
     "type": "project",
     "minimum-stability": "stable",
