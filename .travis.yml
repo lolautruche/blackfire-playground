@@ -1,4 +1,7 @@
 sudo: false
+language: php
+php:
+  - 7.4
 
 cache:
   yarn: true
@@ -11,12 +14,6 @@ env:
     - SYMFONY_PHPUNIT_DIR=./bin/.phpunit
     - SYMFONY_DEPRECATIONS_HELPER=29
     - ACTION="install"
-
-matrix:
-  fast_finish: true
-  include:
-    - php: 7.3
-    - php: 7.4
 
 before_install:
   - 'phpenv config-rm xdebug.ini'
