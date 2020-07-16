@@ -23,7 +23,7 @@ jobs:
         # Setup PHP version.
         php-version: '7.4'
         # Setup PHP extensions.
-        #extensions: apcu
+        extensions: blackfire, apcu, :xdebug
         # Add values to php.ini.
         #ini-values: # optional
         # Setup code coverage driver.
