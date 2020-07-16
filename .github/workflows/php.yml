@@ -58,6 +58,11 @@ jobs:
         blackfire version
         blackfire-agent -v
 
+    - name: Blackfire config dump
+      run: |
+        php --ri blackfire
+        sudo blackfire-agent -d
+
     - name: Symfony local server start
       env:
         APP_ENV: prod
