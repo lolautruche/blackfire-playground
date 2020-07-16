@@ -58,7 +58,14 @@ jobs:
         blackfire version
         blackfire-agent -v
 
-    - name: Blackfire config dump
+    - name: Symfony local server start
+      env:
+        APP_ENV: prod
+        APP_DEBUG: 0
       run: |
-        blackfire config --dump
-        blackfire-agent -d
+        symfony local:server:start -d
+        php bin/console cache:warmup -e prod
+
+    - name: Blackfire Player
+      run: |
+        blackfire-player run --endpoint=http://localhost:8000 --blackfire-env=Playground scenario.bkf
