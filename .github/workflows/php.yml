@@ -29,7 +29,7 @@ jobs:
         # Setup code coverage driver.
         #coverage: # optional
         # Setup popular tools globally.
-        tools: blackfire, blackfire-player
+        tools: blackfire, blackfire-player, symfony
       env:
         BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
         BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
