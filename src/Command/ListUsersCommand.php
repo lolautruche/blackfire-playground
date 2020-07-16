@@ -123,6 +123,8 @@ HELP
         if (null !== $email = $input->getOption('send-to')) {
             $this->sendReport($usersAsATable, $email);
         }
+
+        return 0;
     }
 
     /**
