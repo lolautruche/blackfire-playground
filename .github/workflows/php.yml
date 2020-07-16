@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Setup PHP Action
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@develop
       with:
         # Setup PHP version.
         php-version: '7.4'
