@@ -63,6 +63,12 @@ jobs:
         php --ri blackfire
         sudo blackfire-agent -d
 
+    - name: Profile list-users command
+      env:
+        APP_ENV: prod
+        APP_DEBUG: 0
+      run: blackfire run php bin/console app:list-users
+
     - name: Symfony local server start
       env:
         APP_ENV: prod
