@@ -1,0 +1,26 @@
+name: 'Blackfire Player Action'
+description: 'Run Blackfire Player scenarios'
+inputs:
+    scenario-file:
+        description: 'The file which contains the scenarios to run.'
+        required: true
+    endpoint:
+        description: 'The endpoint to use for running the scenarios against. Overrides the scenario endpoint.'
+        required: true
+    blackfire-env:
+        description: 'The Blackfire environment name or ID where the build will be appended to.'
+        required: true
+    options:
+        description: 'The options that will be appended.'
+        required: false
+        default: ''
+
+runs:
+    using: 'docker'
+    image: 'Dockerfile'
+    args:
+        - run
+        - "--endpoint=${{ inputs.endpoint }}"
+        - "--blackfire-env=${{ inputs.blackfire-env }}"
+        - "${{ inputs.options }}"
+        - ${{ inputs.scenario-file }}

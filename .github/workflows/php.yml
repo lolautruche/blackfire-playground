@@ -78,7 +78,7 @@ jobs:
         php bin/console cache:warmup -e prod
 
     - name: Blackfire Player Action
-      uses: ./github/actions/blackfire-player-run-acton
+      uses: ./github/actions/blackfire-player-run-action
       with:
         scenario-file: scenario.bkf
         endpoint: "http://localhost:8000"
