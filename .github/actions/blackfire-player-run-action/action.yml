@@ -22,5 +22,5 @@ runs:
         - run
         - "--endpoint=${{ inputs.endpoint }}"
         - "--blackfire-env=${{ inputs.blackfire-env }}"
-        - "${{ inputs.options }}"
+#        - "${{ inputs.options }}"
         - ${{ inputs.scenario-file }}
