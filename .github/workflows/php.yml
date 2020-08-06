@@ -52,22 +52,22 @@ jobs:
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Blackfire versions
-      run: |
-        php -v
-        blackfire version
-        blackfire-agent -v
-
-    - name: Blackfire config dump
-      run: |
-        php --ri blackfire
-        sudo blackfire-agent -d
-
-    - name: Profile list-users command
-      env:
-        APP_ENV: prod
-        APP_DEBUG: 0
-      run: blackfire run php bin/console app:list-users
+#    - name: Blackfire versions
+#      run: |
+#        php -v
+#        blackfire version
+#        blackfire-agent -v
+#
+#    - name: Blackfire config dump
+#      run: |
+#        php --ri blackfire
+#        sudo blackfire-agent -d
+#
+#    - name: Profile list-users command
+#      env:
+#        APP_ENV: prod
+#        APP_DEBUG: 0
+#      run: blackfire run php bin/console app:list-users
 
     - name: Symfony local server start
       env:
@@ -78,7 +78,7 @@ jobs:
         php bin/console cache:warmup -e prod
 
     - name: Blackfire Player Action
-      uses: ./github/actions/blackfire-player-run-action
+      uses: ./.github/actions/blackfire-player-run-action
       with:
         scenario-file: scenario.bkf
         endpoint: "http://localhost:8000"
