@@ -77,6 +77,18 @@ jobs:
         symfony local:server:start -d
         php bin/console cache:warmup -e prod
 
-    - name: Blackfire Player
-      run: |
-        blackfire-player run --endpoint=http://localhost:8000 --blackfire-env=Playground scenario.bkf
+    - name: Blackfire Player Action
+      uses: ./github/actions/blackfire-player-run-acton
+      with:
+        scenario-file: scenario.bkf
+        endpoint: "http://localhost:8000"
+        blackfire-env: Playground
+      env:
+        BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+        BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+        BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+        BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
+
+#    - name: Blackfire Player
+#      run: |
+#        blackfire-player run --endpoint=http://localhost:8000 --blackfire-env=Playground scenario.bkf
