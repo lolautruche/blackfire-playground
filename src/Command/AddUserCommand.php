@@ -24,6 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+use function Symfony\Component\String\u;
 
 /**
  * A console command that creates users and stores them in the database.
@@ -38,8 +39,9 @@ use Symfony\Component\Stopwatch\Stopwatch;
  *     $ php bin/console app:add-user -vv
  *
  * See https://symfony.com/doc/current/console.html
- * For more advanced uses, commands can be defined as services too. See
- * https://symfony.com/doc/current/console/commands_as_services.html
+ *
+ * We use the default services.yaml configuration, so command classes are registered as services.
+ * See https://symfony.com/doc/current/console/commands_as_services.html
  *
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  * @author Yonel Ceruto <yonelceruto@gmail.com>
@@ -138,7 +140,7 @@ class AddUserCommand extends Command
         // Ask for the password if it's not defined
         $password = $input->getArgument('password');
         if (null !== $password) {
-            $this->io->text(' > <info>Password</info>: '.str_repeat('*', mb_strlen($password)));
+            $this->io->text(' > <info>Password</info>: '.u('*')->repeat(u($password)->length()));
         } else {
             $password = $this->io->askHidden('Password (your type will be hidden)', [$this->validator, 'validatePassword']);
             $input->setArgument('password', $password);
@@ -167,7 +169,7 @@ class AddUserCommand extends Command
      * This method is executed after interact() and initialize(). It usually
      * contains the logic to execute to complete this command task.
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $stopwatch = new Stopwatch();
         $stopwatch->start('add-user-command');
@@ -188,7 +190,7 @@ class AddUserCommand extends Command
         $user->setEmail($email);
         $user->setRoles([$isAdmin ? 'ROLE_ADMIN' : 'ROLE_USER']);
 
-        // See https://symfony.com/doc/current/book/security.html#security-encoding-password
+        // See https://symfony.com/doc/current/security.html#c-encoding-passwords
         $encodedPassword = $this->passwordEncoder->encodePassword($user, $plainPassword);
         $user->setPassword($encodedPassword);
 
@@ -201,6 +203,8 @@ class AddUserCommand extends Command
         if ($output->isVerbose()) {
             $this->io->comment(sprintf('New user database id: %d / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $user->getId(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
         }
+
+        return 0;
     }
 
     private function validateUserData($username, $plainPassword, $email, $fullName): void

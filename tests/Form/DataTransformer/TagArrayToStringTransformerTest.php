@@ -14,8 +14,6 @@ namespace App\Tests\Form\DataTransformer;
 use App\Entity\Tag;
 use App\Form\DataTransformer\TagArrayToStringTransformer;
 use App\Repository\TagRepository;
-use Blackfire\Bridge\PhpUnit\TestCaseTrait as BlackfireTestTrait;
-use Blackfire\Profile;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,12 +23,10 @@ use PHPUnit\Framework\TestCase;
  */
 class TagArrayToStringTransformerTest extends TestCase
 {
-    use BlackfireTestTrait;
-
     /**
      * Ensures that tags are created correctly.
      */
-    public function testCreateTheRightAmountOfTags()
+    public function testCreateTheRightAmountOfTags(): void
     {
         $tags = $this->getMockedTransformer()->reverseTransform('Hello, Demo, How');
 
@@ -42,7 +38,7 @@ class TagArrayToStringTransformerTest extends TestCase
      * Ensures that empty tags and errors in the number of commas are
      * dealt correctly.
      */
-    public function testCreateTheRightAmountOfTagsWithTooManyCommas()
+    public function testCreateTheRightAmountOfTagsWithTooManyCommas(): void
     {
         $transformer = $this->getMockedTransformer();
 
@@ -53,7 +49,7 @@ class TagArrayToStringTransformerTest extends TestCase
     /**
      * Ensures that leading/trailing spaces are ignored for tag names.
      */
-    public function testTrimNames()
+    public function testTrimNames(): void
     {
         $tags = $this->getMockedTransformer()->reverseTransform('   Hello   ');
 
@@ -63,7 +59,7 @@ class TagArrayToStringTransformerTest extends TestCase
     /**
      * Ensures that duplicated tag names are ignored.
      */
-    public function testDuplicateNames()
+    public function testDuplicateNames(): void
     {
         $tags = $this->getMockedTransformer()->reverseTransform('Hello, Hello, Hello');
 
@@ -73,7 +69,7 @@ class TagArrayToStringTransformerTest extends TestCase
     /**
      * Ensures that the transformer uses tags already persisted in the database.
      */
-    public function testUsesAlreadyDefinedTags()
+    public function testUsesAlreadyDefinedTags(): void
     {
         $persistedTags = [
             $this->createTag('Hello'),
@@ -87,32 +83,10 @@ class TagArrayToStringTransformerTest extends TestCase
     }
 
     /**
-     * @group blackfire
-     * @requires extension blackfire
-     */
-    public function testUsesAlreadyDefinedTagsBlackfire()
-    {
-        $tagArrayToStringTransformer = $this->getMockedTransformer([
-            $this->createTag('Hello'),
-            $this->createTag('World'),
-        ]);
-
-        $config = (new Profile\Configuration())
-            ->setMetadata('skip_timeline', 'false')
-            ->assert('main.wall_time < 50ms')
-            ->assert('main.memory < 8Mb')
-        ;
-
-        $this->assertBlackfire($config, function () use ($tagArrayToStringTransformer) {
-            $tagArrayToStringTransformer->reverseTransform('Hello, World, How, Are, You');
-        });
-    }
-
-    /**
      * Ensures that the transformation from Tag instances to a simple string
      * works as expected.
      */
-    public function testTransform()
+    public function testTransform(): void
     {
         $persistedTags = [
             $this->createTag('Hello'),
