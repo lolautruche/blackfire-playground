@@ -8,6 +8,7 @@ metrics:
         label: 'Markdown to HTML'
         layer: markdown_custom
         timeline: true
+        marker: Mardown to HTML
         matching_calls:
             php:
                 -
@@ -16,6 +17,8 @@ metrics:
 
     greetings:
         label: Greetings phrases
+        timeline: true
+        marker: 'Greetings with "${1}" and ${2}'
         matching_calls:
             php:
                 -
