@@ -2,10 +2,11 @@
 
 namespace App\Utils;
 
-class Greetings
+class Greetings implements GreetingsInterface
 {
-    public function phrase($greeting, $extra)
+    public function phrase(string $greeting, string $extra): string
     {
+        \BlackfireProbe::addMarker("Greetings with '$greeting' and '$extra'");
         usleep(500000);
         return sprintf('%s %s', $greeting, $extra);
     }
