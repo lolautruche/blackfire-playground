@@ -13,7 +13,9 @@ namespace App\Tests\Controller;
 
 use App\Entity\Post;
 use App\Pagination\Paginator;
+use Blackfire\Build\BuildHelper;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Panther\PantherTestCase;
 
 /**
  * Functional test for the controllers defined inside BlogController.
@@ -25,11 +27,28 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  *     $ cd your-symfony-project/
  *     $ ./vendor/bin/phpunit
  */
-class BlogControllerTest extends WebTestCase
+class BlogControllerTest extends PantherTestCase/*WebTestCase*/
 {
+    use BlackfireTestCaseTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        BuildHelper::getInstance()->startBuild('e97cbe91-24b0-40ed-8cb6-f3c9886bccc7', 'Playground build with Symfony functional tests');
+        BuildHelper::getInstance()->createScenario('Blog Controller');
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        BuildHelper::getInstance()->endCurrentScenario();
+        $report = BuildHelper::getInstance()->endCurrentBuild();
+        echo $report->getUrl();
+        parent::tearDownAfterClass();
+    }
+
     public function testIndex(): void
     {
-        $client = static::createClient();
+        $client = static::createBlackfiredHttpBrowserClient();
         $crawler = $client->request('GET', '/en/blog/');
 
         $this->assertResponseIsSuccessful();
@@ -43,7 +62,7 @@ class BlogControllerTest extends WebTestCase
 
     public function testRss(): void
     {
-        $client = static::createClient();
+        $client = static::createBlackfiredHttpBrowserClient();
         $crawler = $client->request('GET', '/en/blog/rss.xml');
 
         $this->assertResponseHeaderSame('Content-Type', 'text/xml; charset=UTF-8');
@@ -63,10 +82,7 @@ class BlogControllerTest extends WebTestCase
      */
     public function testNewComment(): void
     {
-        $client = static::createClient([], [
-            'PHP_AUTH_USER' => 'john_user',
-            'PHP_AUTH_PW' => 'kitten',
-        ]);
+        $client = static::createBlackfiredHttpBrowserClient();
         $client->followRedirects();
 
         // Find first blog post
@@ -74,6 +90,12 @@ class BlogControllerTest extends WebTestCase
         $postLink = $crawler->filter('article.post > h2 a')->link();
 
         $client->click($postLink);
+        $client->clickLink('Sign in');
+        $client->submitForm('Sign in', [
+            '_username' => 'john_user',
+            '_password' => 'kitten',
+        ]);
+
         $crawler = $client->submitForm('Publish comment', [
             'comment[content]' => 'Hi, Symfony!',
         ]);
@@ -85,8 +107,8 @@ class BlogControllerTest extends WebTestCase
 
     public function testAjaxSearch(): void
     {
-        $client = static::createClient();
-        $client->xmlHttpRequest('GET', '/en/blog/search', ['q' => 'lorem']);
+        $client = static::createBlackfiredHttpBrowserClient();
+        $client->xmlHttpRequest('GET', '/en/blog/search?q=lorem', ['q' => 'lorem']);
 
         $results = json_decode($client->getResponse()->getContent(), true);
 
