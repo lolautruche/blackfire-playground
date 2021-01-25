@@ -135,6 +135,15 @@
             ".php_cs.dist"
         ]
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
+    },
+    "laminas/laminas-code": {
+        "version": "3.4.1"
+    },
+    "laminas/laminas-eventmanager": {
+        "version": "3.3.0"
+    },
     "laminas/laminas-zendframework-bridge": {
         "version": "1.1.0"
     },
@@ -177,6 +186,9 @@
     },
     "php-cs-fixer/diff": {
         "version": "v2.0.1"
+    },
+    "php-webdriver/webdriver": {
+        "version": "1.8.2"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -323,6 +335,12 @@
             "src/Kernel.php"
         ]
     },
+    "symfony/http-client": {
+        "version": "v5.1.6"
+    },
+    "symfony/http-client-contracts": {
+        "version": "v2.2.0"
+    },
     "symfony/http-foundation": {
         "version": "v5.1.0-rc1"
     },
@@ -375,6 +393,9 @@
     },
     "symfony/options-resolver": {
         "version": "v5.1.0-rc1"
+    },
+    "symfony/panther": {
+        "version": "v0.7.1"
     },
     "symfony/phpunit-bridge": {
         "version": "4.3",
