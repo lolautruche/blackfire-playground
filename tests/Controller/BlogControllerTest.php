@@ -11,8 +11,8 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Post;
 use App\Pagination\Paginator;
+use Blackfire\Bridge\PhpUnit\BlackfireTestCaseTrait;
 use Blackfire\Build\BuildHelper;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Panther\PantherTestCase;
