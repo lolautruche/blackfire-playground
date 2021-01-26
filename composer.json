@@ -7,10 +7,16 @@
         "symfony/polyfill-php70": "*",
         "symfony/polyfill-php72": "*"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../blackfire.io/languages/php/sdk"
+        }
+    ],
     "require": {
         "php": ">=7.4",
         "ext-pdo_sqlite": "*",
-        "blackfire/php-sdk": "^1.23",
+        "blackfire/php-sdk": "dev-master as 1.23",
         "composer/package-versions-deprecated": "^1.8",
         "doctrine/doctrine-bundle": "^1.12|^2.0",
         "doctrine/doctrine-migrations-bundle": "^3.0",
