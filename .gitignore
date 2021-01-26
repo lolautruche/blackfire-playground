@@ -20,3 +20,5 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /.idea
+.php-version
+.phpunit.result.cache
