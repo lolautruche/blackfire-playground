@@ -17,7 +17,6 @@ metrics:
 
     greetings:
         label: Greetings phrases
-        timeline: true
         marker: 'Greetings with "${1}" and ${2}'
         matching_calls:
             php:
