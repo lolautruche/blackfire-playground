@@ -31,20 +31,7 @@ class BlogControllerTest extends PantherTestCase/*WebTestCase*/
 {
     use BlackfireTestCaseTrait;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        BuildHelper::getInstance()->startBuild('e97cbe91-24b0-40ed-8cb6-f3c9886bccc7', 'Playground build with Symfony functional tests');
-        BuildHelper::getInstance()->createScenario('Blog Controller');
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        BuildHelper::getInstance()->endCurrentScenario();
-        $report = BuildHelper::getInstance()->endCurrentBuild();
-        echo $report->getUrl();
-        parent::tearDownAfterClass();
-    }
+    protected const BLACKFIRE_SCENARIO_TITLE = 'Blog Controller';
 
     public function testIndex(): void
     {
@@ -91,11 +78,13 @@ class BlogControllerTest extends PantherTestCase/*WebTestCase*/
 
         $client->click($postLink);
         $client->clickLink('Sign in');
+        $client->disableProfiling();
         $client->submitForm('Sign in', [
             '_username' => 'john_user',
             '_password' => 'kitten',
         ]);
 
+        $client->enableProfiling();
         $crawler = $client->submitForm('Publish comment', [
             'comment[content]' => 'Hi, Symfony!',
         ]);
