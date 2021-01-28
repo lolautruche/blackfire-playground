@@ -37,5 +37,11 @@
             the test finished, so tests can manipulate the database without affecting other tests -->
         <extension class="\DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
         <extension class="Symfony\Component\Panther\ServerExtension" />
+        <extension class="\Blackfire\Bridge\PhpUnit\BlackfireBuildExtension">
+            <arguments>
+                <string>e97cbe91-24b0-40ed-8cb6-f3c9886bccc7</string>
+                <string>Playground build with Symfony functional tests</string>
+            </arguments>
+        </extension>
     </extensions>
 </phpunit>
