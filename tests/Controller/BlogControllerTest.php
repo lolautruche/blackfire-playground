@@ -12,10 +12,7 @@
 namespace App\Tests\Controller;
 
 use App\Pagination\Paginator;
-use Blackfire\Bridge\PhpUnit\BlackfireTestCaseTrait;
-use Blackfire\Build\BuildHelper;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Panther\PantherTestCase;
+use Blackfire\Bridge\PhpUnit\BlackfireTestCase;
 
 /**
  * Functional test for the controllers defined inside BlogController.
@@ -27,10 +24,8 @@ use Symfony\Component\Panther\PantherTestCase;
  *     $ cd your-symfony-project/
  *     $ ./vendor/bin/phpunit
  */
-class BlogControllerTest extends PantherTestCase/*WebTestCase*/
+class BlogControllerTest extends BlackfireTestCase
 {
-    use BlackfireTestCaseTrait;
-
     protected const BLACKFIRE_SCENARIO_TITLE = 'Blog Controller';
 
     public function testIndex(): void
