@@ -1,4 +1,11 @@
 metrics:
+    app.is_authenticated:
+        label: 'Is authenticated'
+        matching_calls:
+            php:
+                - callee: '=Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken::setUser'
+                  contrib: count-only
+
     markdown_custom:
         label: Markdown
         layer: ~
@@ -34,8 +41,15 @@ tests:
             - 'main.wall_time < 200ms'
             - 'main.memory < 10Mb'
 
-    'Twig displays and renders':
+    'Twig displays and renders (all pages except blog post view)':
         path: '/.*'
+        exclude: '/(en|fr)/blog/posts/.*'
+        assertions:
+            - 'metrics.twig.display.count + metrics.twig.render.count < 40'
+
+    'Twig displays and renders (blog post view)':
+        path: '/(en|fr)/blog/posts/.*'
+        unless: 'metrics.app.is_authenticated.count > 0'
         assertions:
             - 'metrics.twig.display.count + metrics.twig.render.count < 40'
 
