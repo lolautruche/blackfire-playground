@@ -35,15 +35,38 @@ metrics:
                             2: "*"
 
 tests:
-    'All pages are fast':
+    'All app pages are fast':
         path: '/.*'
+        exclude:
+            - '/(en|fr)/admin/.*'
+            - '/(en|fr)/profile/.*'
         assertions:
             - 'main.wall_time < 200ms'
             - 'main.memory < 10Mb'
 
-    'Twig displays and renders (all pages except blog post view)':
+    'All admin and profile pages are reasonably fast':
+        path:
+            - '/(en|fr)/admin/.*'
+            - '/(en|fr)/profile/.*'
+        exclude:
+            - '/(en|fr)/admin/post/'
+        assertions:
+            - 'main.wall_time < 500ms'
+            - 'main.memory < 64Mb'
+
+    'Admin homepage':
+        path: '/(en|fr)/admin/post/'
+        assertions:
+            - 'main.wall_time < 800ms'
+            - 'main.memory < 64Mb'
+
+    'Twig displays and renders (all pages except blog post view and user profile)':
         path: '/.*'
-        exclude: '/(en|fr)/blog/posts/.*'
+        exclude:
+            - '/(en|fr)/blog/posts/.*'
+            - '/(en|fr)/profile/.*'
+            - '/(en|fr)/admin/post/new'
+            - '/(en|fr)/admin/post/[0-9]+/edit'
         assertions:
             - 'metrics.twig.display.count + metrics.twig.render.count < 40'
 
@@ -55,8 +78,11 @@ tests:
 
     'Symfony events dispatched':
         path: '/.*'
+        exclude:
+            - '/(en|fr)/admin/post/new'
+            - '/(en|fr)/admin/post/[0-9]+/edit'
         assertions:
-            - 'metrics.symfony.events.count < 25'
+            - 'metrics.symfony.events.count <= 25'
 
     'Not too many SQL queries on the homepage':
         path: '/(en|fr)/blog/'
