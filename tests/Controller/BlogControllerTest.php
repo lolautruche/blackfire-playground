@@ -28,6 +28,13 @@ class BlogControllerTest extends BlackfireTestCase
 {
     protected const BLACKFIRE_SCENARIO_TITLE = 'Blog Controller';
 
+    public function tearDown(): void
+    {
+        // Enforce to "quit" the browser session.
+        self::$httpBrowserClient = null;
+        parent::tearDown();
+    }
+
     public function testIndex(): void
     {
         $client = static::createBlackfiredHttpBrowserClient();
@@ -92,13 +99,13 @@ class BlogControllerTest extends BlackfireTestCase
     public function testAjaxSearch(): void
     {
         $client = static::createBlackfiredHttpBrowserClient();
-        $client->xmlHttpRequest('GET', '/en/blog/search?q=lorem', ['q' => 'lorem']);
+        $client->xmlHttpRequest('GET', '/en/blog/search?q=eros', ['q' => 'eros']);
 
         $results = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertResponseHeaderSame('Content-Type', 'application/json');
         $this->assertCount(1, $results);
-        $this->assertSame('Lorem ipsum dolor sit amet consectetur adipiscing elit', $results[0]['title']);
+        $this->assertSame('Eros diam egestas libero eu vulputate risus', $results[0]['title']);
         $this->assertSame('Jane Doe', $results[0]['author']);
     }
 }
