@@ -1,0 +1,17 @@
+default:
+    extensions:
+        Blackfire\Bridge\Behat\BlackfireExtension:
+            blackfire_environment: 'Playground'
+            #blackfire_environment: '8194f6bd-6b10-40f9-8fa5-c77d2db92557'
+            build_name: 'BDD test with Behat'
+        Behat\MinkExtension:
+            base_url: 'https://blackfire-playground.ddev.site'
+            sessions:
+                default:
+                    blackfire: ~
+
+    suites:
+        'Main Suite':
+            contexts:
+                - FeatureContext
+                - Behat\MinkExtension\Context\MinkContext
