@@ -2,6 +2,7 @@ name "My Symfony 5 Demo"
 
 scenario
     name 'The main homepage and blog homepage should answer with a 200 status code'
+    auth 'foo:bar'
 
     visit url('/')
         name "Homepage"
