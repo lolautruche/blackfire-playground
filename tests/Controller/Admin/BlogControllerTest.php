@@ -12,10 +12,7 @@
 namespace App\Tests\Controller\Admin;
 
 use App\Repository\PostRepository;
-use Blackfire\Bridge\PhpUnit\BlackfireTestCase;
-use Blackfire\Build\BuildHelper;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -33,21 +30,18 @@ use Symfony\Component\HttpFoundation\Response;
  *     $ cd your-symfony-project/
  *     $ ./vendor/bin/phpunit
  */
-class BlogControllerTest extends BlackfireTestCase
+class BlogControllerTest extends WebTestCase
 {
-    // Let's keep control on the Blackfire Scenarios.
-    protected const BLACKFIRE_SCENARIO_AUTO_START = false;
-
     /**
      * @dataProvider getUrlsForRegularUsers
      */
     public function testAccessDeniedForRegularUsers(string $httpMethod, string $url): void
     {
-        // Here we use the default WebTestCase client.
         $client = static::createClient([], [
             'PHP_AUTH_USER' => 'john_user',
             'PHP_AUTH_PW' => 'kitten',
         ]);
+
         $client->request($httpMethod, $url);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -63,40 +57,36 @@ class BlogControllerTest extends BlackfireTestCase
 
     public function testAdminBackendHomePage(): void
     {
-        $buildHelper = BuildHelper::getInstance();
-        $buildHelper->createScenario('Admin Backend HomePage');
-
-        $client = static::createBlackfiredHttpBrowserClient();
-        $client->request('GET', '/en/admin/post/', [], [], [
-            'HTTP_Authorization' => sprintf('Basic %s', base64_encode('jane_admin:kitten')),
+        $client = static::createClient([], [
+            'PHP_AUTH_USER' => 'jane_admin',
+            'PHP_AUTH_PW' => 'kitten',
         ]);
+        $client->request('GET', '/en/admin/post/');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists(
             'body#admin_post_index #main tbody tr',
             'The backend homepage displays all the available posts.'
         );
-
-        $buildHelper->endCurrentScenario();
     }
 
     /**
-     * This test changes the database contents by creating a new blog post.
+     * This test changes the database contents by creating a new blog post. However,
+     * thanks to the DAMADoctrineTestBundle and its PHPUnit listener, all changes
+     * to the database are rolled back when this test completes. This means that
+     * all the application tests begin with the same database contents.
      */
     public function testAdminNewPost(): void
     {
-        $buildHelper = BuildHelper::getInstance();
-        $buildHelper->createScenario('Admin New Post');
-
         $postTitle = 'Blog Post Title '.mt_rand();
         $postSummary = $this->generateRandomString(255);
         $postContent = $this->generateRandomString(1024);
 
-        $client = static::createBlackfiredHttpBrowserClient();
-        $client->followRedirects(false);
-        $client->request('GET', '/en/admin/post/new', [], [], [
-            'HTTP_Authorization' => sprintf('Basic %s', base64_encode('jane_admin:kitten')),
+        $client = static::createClient([], [
+            'PHP_AUTH_USER' => 'jane_admin',
+            'PHP_AUTH_PW' => 'kitten',
         ]);
+        $client->request('GET', '/en/admin/post/new');
         $client->submitForm('Create post', [
             'post[title]' => $postTitle,
             'post[summary]' => $postSummary,
@@ -106,31 +96,23 @@ class BlogControllerTest extends BlackfireTestCase
         $this->assertResponseRedirects('/en/admin/post/', Response::HTTP_FOUND);
 
         /** @var \App\Entity\Post $post */
-        static::bootKernel();
-        $post = static::$container->get(PostRepository::class)->findOneByTitle($postTitle);
+        $post = self::$container->get(PostRepository::class)->findOneByTitle($postTitle);
         $this->assertNotNull($post);
         $this->assertSame($postSummary, $post->getSummary());
         $this->assertSame($postContent, $post->getContent());
-
-        $buildHelper->endCurrentScenario();
     }
 
     public function testAdminNewDuplicatedPost(): void
     {
-        $buildHelper = BuildHelper::getInstance();
-        $buildHelper->createScenario('Admin New Duplicated Post');
-
         $postTitle = 'Blog Post Title '.mt_rand();
         $postSummary = $this->generateRandomString(255);
         $postContent = $this->generateRandomString(1024);
 
-        $client = static::createBlackfiredHttpBrowserClient();
-        $client->followRedirects(false);
-        // Disable profiling as we just did it before.
-        $client->disableProfiling();
-        $crawler = $client->request('GET', '/en/admin/post/new', [], [], [
-            'HTTP_Authorization' => sprintf('Basic %s', base64_encode('jane_admin:kitten')),
+        $client = static::createClient([], [
+            'PHP_AUTH_USER' => 'jane_admin',
+            'PHP_AUTH_PW' => 'kitten',
         ]);
+        $crawler = $client->request('GET', '/en/admin/post/new');
         $form = $crawler->selectButton('Create post')->form([
             'post[title]' => $postTitle,
             'post[summary]' => $postSummary,
@@ -139,45 +121,38 @@ class BlogControllerTest extends BlackfireTestCase
         $client->submit($form);
 
         // post titles must be unique, so trying to create the same post twice should result in an error
-        $client->enableProfiling();
         $client->submit($form);
 
         $this->assertSelectorTextSame('form .form-group.has-error label', 'Title');
         $this->assertSelectorTextContains('form .form-group.has-error .help-block', 'This title was already used in another blog post, but they must be unique.');
-
-        $buildHelper->endCurrentScenario();
     }
 
     public function testAdminShowPost(): void
     {
-        $buildHelper = BuildHelper::getInstance();
-        $buildHelper->createScenario('Admin Show Post');
-
-        $client = static::createBlackfiredHttpBrowserClient();
-        $client->request('GET', '/en/admin/post/1', [], [], [
-            'HTTP_Authorization' => sprintf('Basic %s', base64_encode('jane_admin:kitten')),
+        $client = static::createClient([], [
+            'PHP_AUTH_USER' => 'jane_admin',
+            'PHP_AUTH_PW' => 'kitten',
         ]);
+        $client->request('GET', '/en/admin/post/1');
 
         $this->assertResponseIsSuccessful();
-
-        $buildHelper->endCurrentScenario();
     }
 
     /**
-     * This test changes the database contents by editing a blog post.
+     * This test changes the database contents by editing a blog post. However,
+     * thanks to the DAMADoctrineTestBundle and its PHPUnit listener, all changes
+     * to the database are rolled back when this test completes. This means that
+     * all the application tests begin with the same database contents.
      */
     public function testAdminEditPost(): void
     {
-        $buildHelper = BuildHelper::getInstance();
-        $buildHelper->createScenario('Admin Edit Post');
-
         $newBlogPostTitle = 'Blog Post Title '.mt_rand();
 
-        $client = static::createBlackfiredHttpBrowserClient();
-        $client->followRedirects(false);
-        $client->request('GET', '/en/admin/post/1/edit', [], [], [
-            'HTTP_Authorization' => sprintf('Basic %s', base64_encode('jane_admin:kitten')),
+        $client = static::createClient([], [
+            'PHP_AUTH_USER' => 'jane_admin',
+            'PHP_AUTH_PW' => 'kitten',
         ]);
+        $client->request('GET', '/en/admin/post/1/edit');
         $client->submitForm('Save changes', [
             'post[title]' => $newBlogPostTitle,
         ]);
@@ -185,12 +160,8 @@ class BlogControllerTest extends BlackfireTestCase
         $this->assertResponseRedirects('/en/admin/post/1/edit', Response::HTTP_FOUND);
 
         /** @var \App\Entity\Post $post */
-
-        static::bootKernel();
-        $post = static::$container->get(PostRepository::class)->find(1);
+        $post = self::$container->get(PostRepository::class)->find(1);
         $this->assertSame($newBlogPostTitle, $post->getTitle());
-
-        $buildHelper->endCurrentScenario();
     }
 
     /**
@@ -201,7 +172,6 @@ class BlogControllerTest extends BlackfireTestCase
      */
     public function testAdminDeletePost(): void
     {
-        // Here we use the default WebTestCase client.
         $client = static::createClient([], [
             'PHP_AUTH_USER' => 'jane_admin',
             'PHP_AUTH_PW' => 'kitten',
@@ -211,7 +181,7 @@ class BlogControllerTest extends BlackfireTestCase
 
         $this->assertResponseRedirects('/en/admin/post/', Response::HTTP_FOUND);
 
-        $post = static::$container->get(PostRepository::class)->find(1);
+        $post = self::$container->get(PostRepository::class)->find(1);
         $this->assertNull($post);
     }
 

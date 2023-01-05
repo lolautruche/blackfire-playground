@@ -17,7 +17,7 @@ use App\Event\CommentCreatedEvent;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
 use App\Repository\TagRepository;
-use App\Utils\Greetings;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -72,7 +72,7 @@ class BlogController extends AbstractController
      * value given in the route.
      * See https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
      */
-    public function postShow(Post $post, Greetings $greetings): Response
+    public function postShow(Post $post): Response
     {
         // Symfony's 'dump()' function is an improved version of PHP's 'var_dump()' but
         // it's not available in the 'prod' environment to prevent leaking sensitive information.
@@ -81,10 +81,7 @@ class BlogController extends AbstractController
         //
         // dump($post, $this->getUser(), new \DateTime());
 
-        return $this->render('blog/post_show.html.twig', [
-            'post' => $post,
-            'greetings' => $greetings->phrase('Hello', 'World'),
-        ]);
+        return $this->render('blog/post_show.html.twig', ['post' => $post]);
     }
 
     /**
@@ -96,7 +93,7 @@ class BlogController extends AbstractController
      * (postSlug) doesn't match any of the Doctrine entity properties (slug).
      * See https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html#doctrine-converter
      */
-    public function commentNew(Request $request, Post $post, EventDispatcherInterface $eventDispatcher): Response
+    public function commentNew(Request $request, Post $post, EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager): Response
     {
         $comment = new Comment();
         $comment->setAuthor($this->getUser());
@@ -106,9 +103,8 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($comment);
-            $em->flush();
+            $entityManager->persist($comment);
+            $entityManager->flush();
 
             // When an event is dispatched, Symfony notifies it to all the listeners
             // and subscribers registered to it. Listeners can modify the information
@@ -161,10 +157,10 @@ class BlogController extends AbstractController
         $results = [];
         foreach ($foundPosts as $post) {
             $results[] = [
-                'title' => htmlspecialchars($post->getTitle(), ENT_COMPAT | ENT_HTML5),
+                'title' => htmlspecialchars($post->getTitle(), \ENT_COMPAT | \ENT_HTML5),
                 'date' => $post->getPublishedAt()->format('M d, Y'),
-                'author' => htmlspecialchars($post->getAuthor()->getFullName(), ENT_COMPAT | ENT_HTML5),
-                'summary' => htmlspecialchars($post->getSummary(), ENT_COMPAT | ENT_HTML5),
+                'author' => htmlspecialchars($post->getAuthor()->getFullName(), \ENT_COMPAT | \ENT_HTML5),
+                'summary' => htmlspecialchars($post->getSummary(), \ENT_COMPAT | \ENT_HTML5),
                 'url' => $this->generateUrl('blog_post', ['slug' => $post->getSlug()]),
             ];
         }

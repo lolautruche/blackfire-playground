@@ -85,7 +85,7 @@ HELP
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if (null !== $input->getArgument('username')) {
             return;
@@ -110,7 +110,7 @@ HELP
     {
         $username = $this->validator->validateUsername($input->getArgument('username'));
 
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->users->findOneByUsername($username);
 
         if (null === $user) {

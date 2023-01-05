@@ -11,8 +11,9 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Post;
 use App\Pagination\Paginator;
-use Blackfire\Bridge\PhpUnit\BlackfireTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Functional test for the controllers defined inside BlogController.
@@ -24,20 +25,11 @@ use Blackfire\Bridge\PhpUnit\BlackfireTestCase;
  *     $ cd your-symfony-project/
  *     $ ./vendor/bin/phpunit
  */
-class BlogControllerTest extends BlackfireTestCase
+class BlogControllerTest extends WebTestCase
 {
-    protected const BLACKFIRE_SCENARIO_TITLE = 'Blog Controller';
-
-    public function tearDown(): void
-    {
-        // Enforce to "quit" the browser session.
-        self::$httpBrowserClient = null;
-        parent::tearDown();
-    }
-
     public function testIndex(): void
     {
-        $client = static::createBlackfiredHttpBrowserClient();
+        $client = static::createClient();
         $crawler = $client->request('GET', '/en/blog/');
 
         $this->assertResponseIsSuccessful();
@@ -51,7 +43,7 @@ class BlogControllerTest extends BlackfireTestCase
 
     public function testRss(): void
     {
-        $client = static::createBlackfiredHttpBrowserClient();
+        $client = static::createClient();
         $crawler = $client->request('GET', '/en/blog/rss.xml');
 
         $this->assertResponseHeaderSame('Content-Type', 'text/xml; charset=UTF-8');
@@ -71,7 +63,10 @@ class BlogControllerTest extends BlackfireTestCase
      */
     public function testNewComment(): void
     {
-        $client = static::createBlackfiredHttpBrowserClient();
+        $client = static::createClient([], [
+            'PHP_AUTH_USER' => 'john_user',
+            'PHP_AUTH_PW' => 'kitten',
+        ]);
         $client->followRedirects();
 
         // Find first blog post
@@ -79,14 +74,6 @@ class BlogControllerTest extends BlackfireTestCase
         $postLink = $crawler->filter('article.post > h2 a')->link();
 
         $client->click($postLink);
-        $client->clickLink('Sign in');
-        $client->disableProfiling();
-        $client->submitForm('Sign in', [
-            '_username' => 'john_user',
-            '_password' => 'kitten',
-        ]);
-
-        $client->enableProfiling();
         $crawler = $client->submitForm('Publish comment', [
             'comment[content]' => 'Hi, Symfony!',
         ]);
@@ -98,14 +85,14 @@ class BlogControllerTest extends BlackfireTestCase
 
     public function testAjaxSearch(): void
     {
-        $client = static::createBlackfiredHttpBrowserClient();
-        $client->xmlHttpRequest('GET', '/en/blog/search?q=eros', ['q' => 'eros']);
+        $client = static::createClient();
+        $client->xmlHttpRequest('GET', '/en/blog/search', ['q' => 'lorem']);
 
         $results = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertResponseHeaderSame('Content-Type', 'application/json');
         $this->assertCount(1, $results);
-        $this->assertSame('Eros diam egestas libero eu vulputate risus', $results[0]['title']);
+        $this->assertSame('Lorem ipsum dolor sit amet consectetur adipiscing elit', $results[0]['title']);
         $this->assertSame('Jane Doe', $results[0]['author']);
     }
 }
