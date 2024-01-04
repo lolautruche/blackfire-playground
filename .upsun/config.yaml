@@ -10,20 +10,20 @@ applications:
         source:
             root: "/"
 
-        type: php:8.2
+        stack:
+          - "php@8.2":
+            extensions:
+              - apcu
+              - blackfire
+              - mbstring
+              - pdo_sqlite
+              - sodium
+              - xsl
+          - "python@2.7"
 
         dependencies:
             php:
                 composer/composer: "^2"
-
-        runtime:
-            extensions:
-                - apcu
-                - blackfire
-                - mbstring
-                - pdo_sqlite
-                - sodium
-                - xsl
                 
 
         variables:
@@ -33,6 +33,8 @@ applications:
             flavor: none
 
         web:
+            commands:
+              start: "php-fpm -c /etc/php/8.2/fpm/php.ini -y /etc/php/8.2/fpm/php-fpm.conf"
             locations:
                 "/":
                     root: "public"
